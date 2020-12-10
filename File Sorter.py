@@ -4,6 +4,9 @@
 # Comments: Created on Tuesday, December 8, 2020 11:15 AM.
 # My first real/actually practical Python script.
 #######################################################################
+# Ideas: have a way to rename the current file in the loop if the
+# user wants???
+#######################################################################
 
 import os
 from tkinter import *

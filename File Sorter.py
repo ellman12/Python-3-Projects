@@ -7,6 +7,7 @@
 # Ideas: have a way to rename the current file in the loop if the
 # user wants???
 # Different modes for sorting. Option to put them by day too.
+# "also, i would reccomment zero padding the month folder, so it's 01 for january, that way it sorts well"
 #######################################################################
 
 import os.path
@@ -39,5 +40,18 @@ for dirPath, _, files in os.walk(dirToSort):
 
             if (EXIF_DATETIME_TAG in exif_data):
                 fileTakenDate = datetime.datetime.strptime(exif_data[EXIF_DATETIME_TAG], "%Y:%m:%d %H:%M:%S")
-                destinationPath = os.path.join(destinationDir, str(fileTakenDate.year), str(fileTakenDate.month))
-                print(f"{fileTakenDate} moved to {destinationPath}")
+
+                # filePath = os.path.join(dirPath, file)
+                filePath = dirPath + r"/" + file
+
+                # destinationPath = os.path.join(destinationDir, str(fileTakenDate.year), str(fileTakenDate.month))
+                destinationPath = destinationDir + r"/" + str(fileTakenDate.year) + r"/" + str(fileTakenDate.month)
+
+                if not os.path.exists(destinationPath):
+                    os.makedirs(destinationPath)
+                shutil.copyfile(filePath, destinationPath)
+
+                print(f"{file} at {filePath} moved to {destinationPath}")
+
+        else:
+            print("Unsupported file type.")

@@ -6,23 +6,38 @@
 #######################################################################
 # Ideas: have a way to rename the current file in the loop if the
 # user wants???
+# Different modes for sorting. Option to put them by day too.
 #######################################################################
 
-import os
+import os.path
+import shutil
 from tkinter import *
 from tkinter import filedialog
+import PIL.Image
+import datetime
+
+# Constants
+EXIF_DATETIME_TAG = 36867
 
 folderDialog = Tk()
 folderDialog.withdraw()  # Hide useless extra window.
 
 # Get the directories to use.
-folderDialog = filedialog.askdirectory(title="Select directory to sort")
-dirToSort = folderDialog  # Unsorted directory.
+dirToSort = filedialog.askdirectory(title="Select directory to sort")
+destinationDir = filedialog.askdirectory(title="Where should the sorted files go?")
 
-folderDialog = filedialog.askdirectory(title="Select directory to sort")
-destinationDir = folderDialog  # Where sorted files go.
-
-for _, _, files in os.walk(dirToSort):
+for dirPath, _, files in os.walk(dirToSort):
     for file in files:
-        if (".png" in file) or (".jpg" in file):
-            print(file)
+        # if (".jpg" in file) or (".mp4" in file):
+        if (".jpg" in file):
+            img = PIL.Image.open(os.path.join(dirPath, file))
+            exif_data = img._getexif()
+
+            if (exif_data == None):
+                print(f"Error. {file} doesn't have date :(")
+                continue
+
+            if (EXIF_DATETIME_TAG in exif_data):
+                fileTakenDate = datetime.datetime.strptime(exif_data[EXIF_DATETIME_TAG], "%Y:%m:%d %H:%M:%S")
+                destinationPath = os.path.join(destinationDir, str(fileTakenDate.year), str(fileTakenDate.month))
+                print(f"{fileTakenDate} moved to {destinationPath}")

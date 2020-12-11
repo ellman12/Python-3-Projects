@@ -10,6 +10,9 @@
 # Move files with errors to unsorted folder.
 # "also, i would reccomment zero padding the month folder, so it's 01 for january, that way it sorts well"
 #######################################################################
+# Todo: error/unknown folder
+# MP4s
+#######################################################################
 
 import os.path
 import shutil
@@ -20,6 +23,7 @@ import datetime
 
 # Constants
 EXIF_DATETIME_TAG = 36867
+MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
 folderDialog = Tk()
 folderDialog.withdraw()  # Hide useless extra window.
@@ -36,23 +40,30 @@ for dirPath, _, files in os.walk(dirToSort):
             exif_data = img._getexif()
 
             if (exif_data == None):
-                print(f"Error. {file} doesn't have date :(")
-                continue
+                print(f"Error. {file} doesn't have date. Moving to unknown folder.")
 
-            if (EXIF_DATETIME_TAG in exif_data):
+                filePath = os.path.join(dirPath, file)
+                destinationPath = os.path.join(destinationDir, "Unknown")
+                print(destinationDir, destinationPath)
+
+                if not os.path.exists(destinationPath):
+                    os.makedirs(destinationPath)
+                shutil.copyfile(filePath, os.path.join(destinationPath, file))
+
+            if (exif_data != None) and (EXIF_DATETIME_TAG in exif_data):
                 fileTakenDate = datetime.datetime.strptime(exif_data[EXIF_DATETIME_TAG], "%Y:%m:%d %H:%M:%S")
 
                 filePath = os.path.join(dirPath, file)
-                # filePath = dirPath + r"/" + file
-
-                destinationPath = os.path.join(destinationDir, str(fileTakenDate.year), str(fileTakenDate.month))
-                # destinationPath = destinationDir + r"/" + str(fileTakenDate.year) + r"/" + str(fileTakenDate.month)
+                destinationPath = os.path.join(destinationDir, str(fileTakenDate.year), str(fileTakenDate.month) + " " + MONTH_NAMES[fileTakenDate.month - 1])
 
                 if not os.path.exists(destinationPath):
                     os.makedirs(destinationPath)
                 shutil.copyfile(filePath, os.path.join(destinationPath, file))
 
                 print(f"{file} at {filePath} moved to {destinationPath}")
+
+        # elif (".mp4" in file):
+
 
         else:
             print("Unsupported file type.")

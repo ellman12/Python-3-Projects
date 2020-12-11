@@ -34,16 +34,15 @@ destinationDir = filedialog.askdirectory(title="Where should the sorted files go
 
 for dirPath, _, files in os.walk(dirToSort):
     for file in files:
-        # if (".jpg" in file) or (".mp4" in file):
         if (".jpg" in file):
             img = PIL.Image.open(os.path.join(dirPath, file))
             exif_data = img._getexif()
 
             if (exif_data == None):
-                print(f"Error. {file} doesn't have date. Moving to unknown folder.")
+                print(f"{file} doesn't have date. Moving to unknown folder.")
 
                 filePath = os.path.join(dirPath, file)
-                destinationPath = os.path.join(destinationDir, "Unknown")
+                destinationPath = os.path.join(destinationDir, "No Time in Metadata")
                 print(destinationDir, destinationPath)
 
                 if not os.path.exists(destinationPath):
@@ -62,8 +61,14 @@ for dirPath, _, files in os.walk(dirToSort):
 
                 print(f"{file} at {filePath} moved to {destinationPath}")
 
-        # elif (".mp4" in file):
+        elif (".mp4" in file):
+            print(f"Moving {file} to .mp4 folder")
+            filePath = os.path.join(dirPath, file)
+            destinationPath = os.path.join(destinationDir, "MP4s")
 
+            if not os.path.exists(destinationPath):
+                os.makedirs(destinationPath)
+            shutil.copyfile(filePath, os.path.join(destinationPath, file))
 
         else:
-            print("Unsupported file type.")
+            print("Error lol.")

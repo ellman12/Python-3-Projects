@@ -1,17 +1,11 @@
 #######################################################################
-# Purpose: Used to sort files.
+# Purpose: Used to sort picture files.
 #######################################################################
 # Comments: Created on Tuesday, December 8, 2020 11:15 AM.
 # My first real/actually practical Python script.
 #######################################################################
-# Ideas: have a way to rename the current file in the loop if the
-# user wants???
-# Different modes for sorting. Option to put them by day too.
-# Move files with errors to unsorted folder.
+# Ideas: Move files with errors to unsorted folder.
 # "also, i would reccomment zero padding the month folder, so it's 01 for january, that way it sorts well"
-#######################################################################
-# Todo: error/unknown folder
-# MP4s
 #######################################################################
 
 import os.path
@@ -43,7 +37,6 @@ for dirPath, _, files in os.walk(dirToSort):
 
                 filePath = os.path.join(dirPath, file)
                 destinationPath = os.path.join(destinationDir, "No Time in Metadata")
-                print(destinationDir, destinationPath)
 
                 if not os.path.exists(destinationPath):
                     os.makedirs(destinationPath)

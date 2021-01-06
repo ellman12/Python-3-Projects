@@ -19,10 +19,9 @@ import datetime
 EXIF_DATETIME_TAG = 36867
 MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
+# Get the directories to use.
 folderDialog = Tk()
 folderDialog.withdraw()  # Hide useless extra window.
-
-# Get the directories to use.
 dirToSort = filedialog.askdirectory(title="Select directory to sort")
 destinationDir = filedialog.askdirectory(title="Where should the sorted files go?")
 
